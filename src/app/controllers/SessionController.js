@@ -6,7 +6,7 @@ class SessionController {
   async store(req, res) {
     const { email, password } = req.body;
 
-    const user = User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
@@ -19,7 +19,9 @@ class SessionController {
     const { id, name } = user;
     return res.json({
       user: { id, name, email },
-      token: jwt.sign({ id }, '', { expiresIn: '7d' }),
+      token: jwt.sign({ id }, '35c130fcde01c3cd2102ed0356c838b3', {
+        expiresIn: '7d',
+      }),
     });
   }
 }
