@@ -61,6 +61,12 @@ class AppointmentController {
         .json({ message: 'You can only create appointments with providers' });
     }
 
+    if (req.userId === provider_id) {
+      return res.status(401).json({
+        message: 'Appointments with the same provider is not allowed',
+      });
+    }
+
     /**
      * Excludes minutes and seconds of the hour, leaving only the start hour
      * Ex: 19:30:32 = 19:00:00
@@ -101,7 +107,7 @@ class AppointmentController {
 
     await Notification.create({
       content: `Novo agendamento de ${user.name} para ${formattedDate}`,
-      user: req.userId,
+      user: provider_id,
     });
 
     const appointment = await Appointment.create({
